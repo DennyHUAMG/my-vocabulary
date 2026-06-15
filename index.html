@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的英文單字卡</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f0f2f5; margin: 0; }
+        .card { background: white; width: 350px; height: 220px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.3s; padding: 20px; text-align: center; }
+        .card:active { transform: scale(0.98); }
+        #word { font-size: 32px; font-weight: bold; color: #333; margin-bottom: 10px; }
+        #definition { font-size: 20px; color: #666; display: none; }
+        button { margin-top: 25px; padding: 12px 24px; font-size: 16px; border: none; background-color: #007bff; color: white; border-radius: 25px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,123,255,0.2); }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    <div class="card" onclick="flipCard()">
+        <div id="word">點擊「下一題」開始</div>
+        <div id="definition">點擊卡片看中文</div>
+    </div>
+    
+    <button onclick="nextWord()">下一題</button>
+
+    <script>
+        // 這裡可以自由修改、增加你的單字庫
+        const vocabulary = [
+            { eng: "Apple", ch: "蘋果" },
+            { eng: "Beautiful", ch: "美麗的" },
+            { eng: "Challenge", ch: "挑戰" },
+            { eng: "Database", ch: "資料庫" },
+            { eng: "Efficient", ch: "有效率的" }
+        ];
+
+        let currentWord = null;
+
+        function nextWord() {
+            const randomIndex = Math.floor(Math.random() * vocabulary.length);
+            currentWord = vocabulary[randomIndex];
+            
+            document.getElementById("word").innerText = currentWord.eng;
+            document.getElementById("definition").innerText = currentWord.ch;
+            document.getElementById("definition").style.display = "none"; // 換題時先隱藏中文
+        }
+
+        function flipCard() {
+            if (!currentWord) return;
+            const defDiv = document.getElementById("definition");
+            // 切換中文顯示或隱藏
+            if (defDiv.style.display === "none") {
+                defDiv.style.display = "block";
+                // 順便讓瀏覽器唸出聲音（英文發音）
+                let utterance = new SpeechSynthesisUtterance(currentWord.eng);
+                utterance.lang = 'en-US';
+                window.speechSynthesis.speak(utterance);
+            } else {
+                defDiv.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
